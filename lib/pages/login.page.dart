@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vendas_app/pages/cadastro.page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -39,7 +40,12 @@ class _LoginPageState extends State<LoginPage> {
             ButtonTheme(
               height: 60.0,
               child: ElevatedButton(
-                onPressed: () => {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Cadastro()),
+                  );
+                },
                 child: Text(
                   "Cadastrar",
                   style: TextStyle(color: Colors.deepPurple),
