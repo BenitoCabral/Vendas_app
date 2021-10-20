@@ -29,26 +29,23 @@ class _CadastroState extends State<Cadastro> {
                 controller: _emailCotroller,
                 decoration: InputDecoration(labelText: 'Email'),
                 validator: (String? value) {
-                  if (value!.isEmpty) {
-                    return 'Preencha os campos.';
-                  }
+                  if (value!.isEmpty) return 'Preencha o campo.';
                   return null;
                 },
               ),
               TextFormField(
+                obscureText: true,
                 controller: _senhaCotroller,
                 decoration: InputDecoration(labelText: 'Senha'),
                 validator: (String? value) {
-                  if (value!.isEmpty) {
-                    return 'Preencha os campos.';
-                  }
+                  if (value!.isEmpty) return 'Preencha o campo.';
                   return null;
                 },
               ),
               ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      await _cadastrar();
+                      await _cadastrarEmailSenha();
                     }
                   },
                   child: Text('Cadastrar'))
@@ -57,6 +54,7 @@ class _CadastroState extends State<Cadastro> {
         ));
   }
 
+// Limpa os valores salvos do formulário
   @override
   void dispose() {
     _emailCotroller.dispose();
@@ -64,9 +62,9 @@ class _CadastroState extends State<Cadastro> {
     super.dispose();
   }
 
-  Future<void> _cadastrar() async {
-    final User? user = (await _auth.createUserWithEmailAndPassword(
-            email: _emailCotroller.text, password: _senhaCotroller.text))
-        .user;
+  Future<void> _cadastrarEmailSenha() async {
+    await _auth.createUserWithEmailAndPassword(
+        email: _emailCotroller.text, password: _senhaCotroller.text);
+    Navigator.pop(context);
   }
 }
