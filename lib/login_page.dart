@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import './usr_home_page.dart';
 import './cadastro_page.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -31,6 +32,11 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Entrar'),
+          actions: [
+            ElevatedButton(
+                onPressed: () async => await _auth.signOut(),
+                child: Text('Sair'))
+          ],
         ),
         body: Container(
           padding: EdgeInsets.all(20),
@@ -76,10 +82,19 @@ class _LoginPageState extends State<LoginPage> {
         ));
   }
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _senhaController.dispose();
+    super.dispose();
+  }
+
   Future<void> _entrarEmailSenha() async {
     try {
-      await _auth.signInWithEmailAndPassword(
+      UserCredential usuario = await _auth.signInWithEmailAndPassword(
           email: _emailController.text, password: _senhaController.text);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
     } catch (e) {}
   }
 }
