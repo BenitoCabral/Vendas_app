@@ -1,25 +1,41 @@
-import './endereco.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+late UserCredential _usuario;
+
 class Usuario {
-  String _nome;
-  String _email;
-  Endereco _endereco;
+  late String _nome;
+  late String _email;
+  late String _endereco;
+  late String _cidade;
+  late String _estado;
 
-  Usuario(String nome, String email, String rua, String bairro, String cidade,
-      String estado) {
-    this._nome = nome;
-    this._email = email;
-    this._endereco = Endereco(rua, bairro, cidade, estado);
-  }
+  Usuario(this._nome, this._email, this._endereco, this._cidade, this._estado);
 
-  void cadastrarEmailSenha(String senha) async {
+  Future<void> cadastrarEmailSenha(String senha) async {
     try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: this._email, password: senha);
+      _usuario = await _auth.createUserWithEmailAndPassword(
+          email: this._email, password: senha);
     } catch (e) {
       print(e);
     }
   }
+
+  Future<void> cadastrarUsuario() async {
+    try {
+      await _firestore.collection('usuarios').add(usuarioToJson());
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Map<String, dynamic> usuarioToJson() => {
+        'nome': _nome,
+        'email': _email,
+        'endereco': _endereco,
+        'cidade': _cidade,
+        'estado': _estado,
+      };
 }
