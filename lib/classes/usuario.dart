@@ -33,18 +33,19 @@ class Usuario {
     this._estado = estado;
   }
 
-  Future<void> cadastrarEmailSenha(String senha) async {
+  void cadastrarEmailSenha(String senha) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
+      var _cadastro = await _auth.createUserWithEmailAndPassword(
           email: this._email, password: senha);
+      salvarDadosUsuario(_cadastro.user?.uid);
     } catch (e) {
       print(e);
     }
   }
 
-  Future<void> cadastrarUsuario() async {
+  void salvarDadosUsuario(userID) {
     try {
-      await _firestore.collection('usuarios').add(usuarioToJson());
+      _firestore.collection('usuarios').doc(userID).set(usuarioToJson());
     } catch (e) {
       print(e);
     }

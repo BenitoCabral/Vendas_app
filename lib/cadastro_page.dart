@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vendas_app/classes/usuario.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
 class Cadastro extends StatefulWidget {
   const Cadastro({Key? key}) : super(key: key);
 
@@ -14,7 +12,7 @@ class Cadastro extends StatefulWidget {
 class _CadastroState extends State<Cadastro> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _senhaCotroller = TextEditingController();
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   Usuario usuario = new Usuario();
 
   @override
@@ -81,9 +79,10 @@ class _CadastroState extends State<Cadastro> {
                   ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          _auth.signOut();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Cadastrando...")));
                           usuario.cadastrarEmailSenha(_senhaCotroller.text);
-                          usuario.cadastrarUsuario();
+                          _auth.signOut();
                           Navigator.pop(context);
                         }
                       },
